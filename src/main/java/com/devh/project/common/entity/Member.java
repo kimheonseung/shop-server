@@ -17,10 +17,11 @@ import java.util.List;
 @SuperBuilder
 @NoArgsConstructor
 @Getter
-public class User extends BaseUser {
-    @Embedded
+public class Member extends BaseMember {
+	private static final long serialVersionUID = 6930767283688721121L;
+	@Embedded
     private Address address;
     @Builder.Default
-    @OneToMany(mappedBy = "user")
+    @OneToMany(mappedBy = "member")
     private List<Order> orders = new ArrayList<>();
 }

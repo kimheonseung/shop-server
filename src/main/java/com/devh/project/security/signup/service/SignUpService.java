@@ -1,13 +1,13 @@
 package com.devh.project.security.signup.service;
 
-import com.devh.project.common.entity.RedisUser;
-import com.devh.project.common.entity.User;
+import com.devh.project.common.entity.RedisMember;
+import com.devh.project.common.entity.Member;
 import com.devh.project.common.helper.AES256Helper;
 import com.devh.project.common.helper.AuthKeyHelper;
 import com.devh.project.common.helper.BCryptHelper;
 import com.devh.project.common.helper.MailHelper;
-import com.devh.project.common.repository.RedisUserRepository;
-import com.devh.project.common.repository.UserRepository;
+import com.devh.project.common.repository.RedisMemberRepository;
+import com.devh.project.common.repository.MemberRepository;
 import com.devh.project.security.signup.SignUpStatus;
 import com.devh.project.security.signup.dto.SignUpRequestDTO;
 import com.devh.project.security.signup.dto.SignUpResponseDTO;
@@ -25,8 +25,8 @@ import org.springframework.transaction.annotation.Transactional;
 public class SignUpService {
 
     private final AES256Helper aes256Helper;
-    private final UserRepository userRepository;
-    private final RedisUserRepository redisUserRepository;
+    private final MemberRepository memberRepository;
+    private final RedisMemberRepository redisMemberRepository;
     private final AuthKeyHelper authKeyHelper;
     private final BCryptHelper bcryptHelper;
     private final MailHelper mailService;
@@ -34,49 +34,49 @@ public class SignUpService {
     public SignUpResponseDTO signUpByMemberSignUpRequestVO(SignUpRequestDTO signUpRequestDTO) {
     	final String username = signUpRequestDTO.getUsername();
     	/* exist check */
-    	if(userRepository.existsByUsername(username))
+    	if(memberRepository.existsByUsername(username))
     		throw new DuplicateEmailException(username+" already exists.");
     	/* save temporary until email authentication */
-    	RedisUser redisUser = redisUserRepository.save(toRedisUser(signUpRequestDTO));
+    	RedisMember redisMember = redisMemberRepository.save(toRedisMember(signUpRequestDTO));
     	/* send mail */
-    	mailService.sendSignupValidationMail(signUpRequestDTO.getUsername(), redisUser.getAuthKey());
+    	mailService.sendSignupValidationMail(signUpRequestDTO.getUsername(), redisMember.getAuthKey());
     	/* return sign up response */
     	return SignUpResponseDTO.builder()
-    			.signUpStatus(StringUtils.equals(username, redisUser.getUsername()) ? SignUpStatus.REQUESTED : SignUpStatus.ERROR)
+    			.signUpStatus(StringUtils.equals(username, redisMember.getUsername()) ? SignUpStatus.REQUESTED : SignUpStatus.ERROR)
     			.username(username)
     			.build();
     }
     
     public SignUpResponseDTO commitSignUpByEmailAndAuthKey(String username, String authKey) {
 		/* redis check */
-		RedisUser redisUser = redisUserRepository.findById(username).orElse(null);
-		if(redisUser == null)
+		RedisMember redisMember = redisMemberRepository.findById(username).orElse(null);
+		if(redisMember == null)
 			throw new SignUpException("Failed to sign up ["+username+"]. Maybe time expired.");
 		/* auth key check */
-		if(!StringUtils.equals(authKey, redisUser.getAuthKey()))
+		if(!StringUtils.equals(authKey, redisMember.getAuthKey()))
 			throw new SignUpException("Invalid Authentication URL.");
 		/* db check */
-		if(userRepository.existsByUsername(username))
+		if(memberRepository.existsByUsername(username))
 			throw new SignUpException("Already exists.");
 		/* save */
-		User user = userRepository.save(toUser(redisUser));
-		redisUserRepository.deleteById(username);
+		Member member = memberRepository.save(toMember(redisMember));
+		redisMemberRepository.deleteById(username);
 		return SignUpResponseDTO.builder()
-				.signUpStatus(StringUtils.equals(username, user.getUsername()) ? SignUpStatus.COMPLETED : SignUpStatus.ERROR)
+				.signUpStatus(StringUtils.equals(username, member.getUsername()) ? SignUpStatus.COMPLETED : SignUpStatus.ERROR)
 				.username(username)
 				.build();
     }
 
-    private User toUser(RedisUser redisMember) {
-        return (User) User.builder()
+    private Member toMember(RedisMember redisMember) {
+        return (Member) Member.builder()
                 .username(redisMember.getUsername())
                 .password(redisMember.getPassword())
                 .build();
     }
     
-    private RedisUser toRedisUser(SignUpRequestDTO signUpRequestDTO) throws PasswordException {
+    private RedisMember toRedisMember(SignUpRequestDTO signUpRequestDTO) throws PasswordException {
     	try {
-    		return RedisUser.builder()
+    		return RedisMember.builder()
     				.username(signUpRequestDTO.getUsername())
     				.password(bcryptHelper.encode(aes256Helper.decrypt(signUpRequestDTO.getPassword())))
     				.authKey(authKeyHelper.generateAuthKey())

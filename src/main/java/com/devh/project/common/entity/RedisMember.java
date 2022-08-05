@@ -9,12 +9,12 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.redis.core.RedisHash;
 
 @Getter
-@RedisHash(value = "user", timeToLive = 300)
+@RedisHash(value = "member", timeToLive = 300)
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
-public class RedisUser {
+public class RedisMember {
     @Id
     private String username;
     private String password;

@@ -1,6 +1,6 @@
 package com.devh.project.shop.entity;
 
-import com.devh.project.common.entity.User;
+import com.devh.project.common.entity.Member;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -20,8 +20,8 @@ public class Order {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "USER_ID")
-    private User user;
+    @JoinColumn(name = "MEMBER_ID")
+    private Member member;
 
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
     private List<OrderItem> orderItems = new ArrayList<>();
@@ -36,9 +36,9 @@ public class Order {
     private Status status;
     
     // 연관관계
-    public void setUser(User user) {
-    	this.user = user;
-        user.getOrders().add(this);
+    public void setMember(Member member) {
+    	this.member = member;
+    	member.getOrders().add(this);
     }
     
     public void addOrderItem(OrderItem orderItem) {
@@ -52,9 +52,9 @@ public class Order {
     }
 
     //  생성
-    public static Order createOrder(User user, Delivery delivery, OrderItem... orderItems) {
+    public static Order createOrder(Member member, Delivery delivery, OrderItem... orderItems) {
         Order order = new Order();
-        order.setUser(user);
+        order.setMember(member);
         order.setDelivery(delivery);
         for(OrderItem orderItem : orderItems) {
             order.addOrderItem(orderItem);

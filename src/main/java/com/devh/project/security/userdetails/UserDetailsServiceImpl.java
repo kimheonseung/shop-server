@@ -1,7 +1,7 @@
 package com.devh.project.security.userdetails;
 
-import com.devh.project.common.entity.BaseUser;
-import com.devh.project.common.repository.UserRepository;
+import com.devh.project.common.entity.BaseMember;
+import com.devh.project.common.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -14,23 +14,23 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class UserDetailsServiceImpl implements UserDetailsService {
 
-	private final UserRepository userRepository;
+	private final MemberRepository memberRepository;
 	
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 		log.info("findByUsername... "+username);
 		return toUserDetails(
-				userRepository
+				memberRepository
 						.findByUsername(username)
 						.orElseThrow(() -> new UsernameNotFoundException(username))
 		);
 	}
 
-	public UserDetails toUserDetails(BaseUser user) {
+	public UserDetails toUserDetails(BaseMember member) {
 		return UserDetailsImpl.builder()
-				.id(user.getId())
-				.username(user.getUsername())
-				.password(user.getPassword())
+				.id(member.getId())
+				.username(member.getUsername())
+				.password(member.getPassword())
 				.build();
 	}
 }

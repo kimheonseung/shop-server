@@ -1,7 +1,7 @@
 package com.devh.project.shop.service;
 
-import com.devh.project.common.entity.User;
-import com.devh.project.common.repository.UserRepository;
+import com.devh.project.common.entity.Member;
+import com.devh.project.common.repository.MemberRepository;
 import com.devh.project.shop.entity.Delivery;
 import com.devh.project.shop.entity.Order;
 import com.devh.project.shop.entity.OrderItem;
@@ -20,19 +20,19 @@ import java.util.List;
 @Transactional
 public class OrderService {
     private final OrderRepository orderRepository;
-    private final UserRepository userRepository;
+    private final MemberRepository memberRepository;
     private final ItemRepository itemRepository;
 
     public Long order(Long userId, Long itemId, int count) {
-        User user = userRepository.findById(userId).orElseThrow();
+        Member member = memberRepository.findById(userId).orElseThrow();
         Item item = itemRepository.findById(itemId).orElseThrow();
 
-        Delivery delivery = new Delivery(user.getAddress());
+        Delivery delivery = new Delivery(member.getAddress());
         OrderItem orderItem = OrderItem.createOrderItem(item, item.getPrice(), count);
         Order order = orderRepository.save(
-                Order.createOrder(user, delivery, orderItem)
+                Order.createOrder(member, delivery, orderItem)
         );
-        System.out.printf("%s의 주문 - %s [%d 원] %d개 \n배송지: %s", order.getUser().getUsername(), item.getName(), item.getPrice(), count, order.getDelivery().getAddress().toString());
+        System.out.printf("%s의 주문 - %s [%d 원] %d개 \n배송지: %s", order.getMember().getUsername(), item.getName(), item.getPrice(), count, order.getDelivery().getAddress().toString());
         return order.getId();
     }
 

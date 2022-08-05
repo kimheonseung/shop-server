@@ -20,16 +20,16 @@ import java.io.Serializable;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
-@EqualsAndHashCode(of = {"id", "user"})
+@EqualsAndHashCode(of = {"id", "member"})
 @ToString
-public class UserToken implements Serializable {
+public class MemberToken implements Serializable {
     private static final long serialVersionUID = -4514969123821169077L;
     @Id
     @GeneratedValue
     private Long id;
     @OneToOne
-    @JoinColumn(name="user_username", referencedColumnName = "username")
-    private User user;
+    @JoinColumn(name="MEMBER_ID", referencedColumnName = "MEMBER_ID")
+    private Member member;
     @Column(nullable = false, unique = true)
     private String refreshToken;
 

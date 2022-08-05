@@ -14,9 +14,10 @@ import java.io.Serializable;
 @SuperBuilder
 @NoArgsConstructor
 @Getter
-public abstract class BaseUser implements Serializable {
+public abstract class BaseMember implements Serializable {
 	private static final long serialVersionUID = -2158602508448402581L;
 	@Id @GeneratedValue
+	@Column(name = "MEMBER_ID")
     private Long id;
     @Column(nullable = false, unique = true)
     private String username;

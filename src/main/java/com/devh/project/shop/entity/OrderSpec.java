@@ -1,6 +1,6 @@
 package com.devh.project.shop.entity;
 
-import com.devh.project.common.entity.User;
+import com.devh.project.common.entity.Member;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.jpa.domain.Specification;
 
@@ -18,7 +18,7 @@ public class OrderSpec {
             public Predicate toPredicate(Root<Order> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) {
                 if(StringUtils.isEmpty(username))
                     return null;
-                Join<Order, User> join = root.join("user", JoinType.INNER);
+                Join<Order, Member> join = root.join("member", JoinType.INNER);
                 return criteriaBuilder.equal(join.<String>get("username"), username);
             }
         };
@@ -30,7 +30,7 @@ public class OrderSpec {
             public Predicate toPredicate(Root<Order> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) {
                 if(StringUtils.isEmpty(username))
                     return null;
-                Join<Order, User> join = root.join("user", JoinType.INNER);
+                Join<Order, Member> join = root.join("member", JoinType.INNER);
                 return criteriaBuilder.like(join.<String>get("username"), "%"+username+"%");
             }
         };
