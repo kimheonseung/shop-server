@@ -1,6 +1,7 @@
 package com.devh.project.shop.entity;
 
-import com.devh.project.shop.entity.item.Item;
+import com.devh.project.item.entity.Item;
+import com.devh.project.item.exception.NotEnoughStockException;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -35,7 +36,7 @@ public class OrderItem {
     private int count;
 
     // 생성
-    public static OrderItem createOrderItem(Item item, int orderPrice, int count) {
+    public static OrderItem createOrderItem(Item item, int orderPrice, int count) throws NotEnoughStockException {
         OrderItem orderItem = new OrderItem();
         orderItem.setItem(item);
         orderItem.setOrderPrice(orderPrice);

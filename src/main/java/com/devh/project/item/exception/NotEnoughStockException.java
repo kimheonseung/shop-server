@@ -1,6 +1,6 @@
-package com.devh.project.shop.exception;
+package com.devh.project.item.exception;
 
-public class NotEnoughStockException extends RuntimeException {
+public class NotEnoughStockException extends Exception {
     public NotEnoughStockException() {
     }
 

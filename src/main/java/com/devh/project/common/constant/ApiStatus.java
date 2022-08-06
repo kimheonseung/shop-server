@@ -75,6 +75,9 @@ public class ApiStatus {
         TOKEN_GENERATE_ERROR("Token Generate Error", 802, "Token generate failed."),
         TOKEN_INVALIDATE_ERROR("Token Invalidate Error", 802, "Token invalidate failed."),
         TOKEN_REFRESH_ERROR("Token Refresh Error", 802, "Token refresh failed."),
+        NOT_ENOUGH_STOCK_ERROR("Not enough stock Error", 803, "Not enough stock."),
+        UNKNOWN_DISCRIMINATOR_ERROR("Unknown Discriminator Error", 803, "Unknown discriminator."),
+        ITEM_ERROR("Item Error", 803, "Item Error.")
         ;
 
         private final String status;

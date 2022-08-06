@@ -1,4 +1,4 @@
-package com.devh.project.shop.entity.item;
+package com.devh.project.item.entity;
 
 import lombok.Getter;
 import lombok.Setter;
