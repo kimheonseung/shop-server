@@ -77,7 +77,8 @@ public class ApiStatus {
         TOKEN_REFRESH_ERROR("Token Refresh Error", 802, "Token refresh failed."),
         NOT_ENOUGH_STOCK_ERROR("Not enough stock Error", 803, "Not enough stock."),
         UNKNOWN_DISCRIMINATOR_ERROR("Unknown Discriminator Error", 803, "Unknown discriminator."),
-        ITEM_ERROR("Item Error", 803, "Item Error.")
+        ITEM_ERROR("Item Error", 803, "Item Error."),
+        CAFE_MENU_SERVICE_ERROR("Cafe Menu Service Error", 804, "Cafe menu service error.")
         ;
 
         private final String status;
