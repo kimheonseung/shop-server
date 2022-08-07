@@ -7,6 +7,6 @@ import java.util.List;
 
 @Getter
 @Setter
-public class CafeMenuCreateRequestDTO {
-    private List<CafeMenuDTO> cafeMenuList;
+public class MenuCreateRequestDTO {
+    private List<MenuDTO> cafeMenuList;
 }

@@ -1,5 +1,6 @@
 package com.devh.project.cafe.dto;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -7,6 +8,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @Builder
 @NoArgsConstructor
-public class CafeMenuModifyResponseDTO {
+@AllArgsConstructor
+public class MenuModifyResponseDTO {
     private boolean result;
 }
