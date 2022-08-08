@@ -1,35 +1,22 @@
 package com.devh.project.cafe.entity;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.FetchType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
-
 import com.devh.project.cafe.constant.OrderStatus;
 import com.devh.project.common.entity.Member;
-
 import groovy.transform.Generated;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
+
+import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "CAFE_ORDER")
 @Builder
-@Setter
-@Getter
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
 public class Order {
@@ -42,11 +29,14 @@ public class Order {
 	private Member member;
 	
 	@OneToMany(mappedBy = "menu", cascade = CascadeType.ALL)
-	@Builder.Default
-	private final List<OrderMenu> orderMenuList = new ArrayList<OrderMenu>();
+	private final List<OrderMenu> orderMenuList = new ArrayList<>();
 	
 	@Enumerated(EnumType.STRING)
 	private OrderStatus status;
+
+	public void setStatus(OrderStatus status) {
+		this.status = status;
+	}
 	
 	public static Order create(Member member, OrderMenu... orderMenus) {
 		Order order = new Order();

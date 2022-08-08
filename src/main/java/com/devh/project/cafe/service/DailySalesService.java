@@ -25,9 +25,7 @@ public class DailySalesService {
         final String nowDate = sdf.format(new Date());
         Menu menu = menuRepository.findById(id).orElseThrow();
         
-        DailySales dailySales = dailySalesRepository.findByDateAndMenu(nowDate, menu).orElseGet(() -> {
-        	return dailySalesRepository.save(DailySales.create(nowDate, menu));
-        });
+        DailySales dailySales = dailySalesRepository.findByDateAndMenu(nowDate, menu).orElseGet(() -> dailySalesRepository.save(DailySales.create(nowDate, menu)));
         
         final long before = dailySales.getSales();
         dailySales.addSales(amount);

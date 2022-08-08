@@ -12,4 +12,9 @@ public class CafeExceptionAdvice {
     public <T> ApiResponseDTO<T> handleCafeMenuServiceException(Exception e) {
         return ApiResponseDTO.customError(ApiStatus.CustomError.CAFE_MENU_SERVICE_ERROR, e.getMessage());
     }
+    @ExceptionHandler({Exception.class})
+    public <T> ApiResponseDTO<T> handleException(Exception e) {
+        e.printStackTrace();
+        return ApiResponseDTO.serverError(ApiStatus.ServerError.INTERNAL_SERVER_ERROR, e.getMessage());
+    }
 }

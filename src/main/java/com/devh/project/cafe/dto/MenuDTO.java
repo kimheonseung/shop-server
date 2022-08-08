@@ -1,13 +1,11 @@
 package com.devh.project.cafe.dto;
 
-import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
 @Getter
 @Setter
-@Builder
 @ToString
 public class MenuDTO {
     private Long id;
@@ -17,20 +15,20 @@ public class MenuDTO {
     private boolean onSale;
 
     public static MenuDTO create(String name, long price, boolean ice, boolean onSale) {
-        return MenuDTO.builder()
-                .name(name)
-                .price(price)
-                .ice(ice)
-                .onSale(onSale)
-                .build();
+        MenuDTO menuDTO = new MenuDTO();
+        menuDTO.setName(name);
+        menuDTO.setPrice(price);
+        menuDTO.setIce(ice);
+        menuDTO.setOnSale(onSale);
+        return menuDTO;
     }
     public static MenuDTO create(Long id, String name, long price, boolean ice, boolean onSale) {
-        return MenuDTO.builder()
-                .id(id)
-                .name(name)
-                .price(price)
-                .ice(ice)
-                .onSale(onSale)
-                .build();
+        MenuDTO menuDTO = new MenuDTO();
+        menuDTO.setId(id);
+        menuDTO.setName(name);
+        menuDTO.setPrice(price);
+        menuDTO.setIce(ice);
+        menuDTO.setOnSale(onSale);
+        return menuDTO;
     }
 }

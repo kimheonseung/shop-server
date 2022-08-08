@@ -1,18 +1,16 @@
 package com.devh.project.cafe.service;
 
-import java.util.ArrayList;
-import java.util.List;
-
+import com.devh.project.cafe.dto.MenuDTO;
+import com.devh.project.cafe.entity.Menu;
+import com.devh.project.cafe.repository.MenuRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
-import com.devh.project.cafe.dto.MenuDTO;
-import com.devh.project.cafe.entity.Menu;
-import com.devh.project.cafe.repository.MenuRepository;
-
-import lombok.RequiredArgsConstructor;
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -33,7 +31,7 @@ public class MenuService {
     
     public PageImpl<MenuDTO> search(int page, int size) {
     	Page<Menu> menuPage = menuRepository.findAll(PageRequest.of(page-1, size));
-    	return new PageImpl<MenuDTO>(createMenuDTOList(menuPage.getContent()), menuPage.getPageable(), menuPage.getTotalElements());
+    	return new PageImpl<>(createMenuDTOList(menuPage.getContent()), menuPage.getPageable(), menuPage.getTotalElements());
     }
 
     public boolean modify(MenuDTO menuDTO) {
@@ -49,9 +47,7 @@ public class MenuService {
     }
 
     private void update(Menu entity, MenuDTO dto) {
-        entity.setName(dto.getName());
         entity.setPrice(dto.getPrice());
-        entity.setIce(dto.isIce());
         entity.setOnSale(dto.isOnSale());
     }
 
