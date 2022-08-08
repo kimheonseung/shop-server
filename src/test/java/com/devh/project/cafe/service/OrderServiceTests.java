@@ -12,8 +12,10 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import com.devh.project.cafe.entity.DailySales;
 import com.devh.project.cafe.entity.Menu;
 import com.devh.project.cafe.entity.Order;
+import com.devh.project.cafe.repository.DailySalesRepository;
 import com.devh.project.cafe.repository.MenuRepository;
 import com.devh.project.cafe.repository.OrderRepository;
 import com.devh.project.common.entity.Member;
@@ -27,6 +29,8 @@ public class OrderServiceTests {
 	private MenuRepository menuRepository;
 	@Mock
 	private MemberRepository memberRepository;
+	@Mock
+	private DailySalesRepository dailySalesRepository;
 	@InjectMocks
 	private OrderService orderService;
 	
@@ -49,6 +53,8 @@ public class OrderServiceTests {
 			savedOrder.setId(1234L);
 			return savedOrder;
 		});
+		given(dailySalesRepository.findByDateAndMenu(any(String.class), any(Menu.class))).willReturn(Optional.empty());
+		given(dailySalesRepository.save(any(DailySales.class))).willAnswer(i -> i.getArguments()[0]);
 		// when
 		Long orderId = orderService.create(givenMemberId, givenMenuId, givenCount);
 		// then

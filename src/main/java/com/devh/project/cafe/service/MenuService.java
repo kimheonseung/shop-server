@@ -3,6 +3,9 @@ package com.devh.project.cafe.service;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import com.devh.project.cafe.dto.MenuDTO;
@@ -26,6 +29,11 @@ public class MenuService {
         savedMenuList.forEach(e -> sbSavedAudit.append("\n\t").append(e.toString()));
 
         return savedMenuList.size();
+    }
+    
+    public PageImpl<MenuDTO> search(int page, int size) {
+    	Page<Menu> menuPage = menuRepository.findAll(PageRequest.of(page-1, size));
+    	return new PageImpl<MenuDTO>(createMenuDTOList(menuPage.getContent()), menuPage.getPageable(), menuPage.getTotalElements());
     }
 
     public boolean modify(MenuDTO menuDTO) {
@@ -53,5 +61,16 @@ public class MenuService {
                 Menu.create(dto.getName(), dto.getPrice(), dto.isIce(), dto.isOnSale())
         ));
         return menuList;
+    }
+    
+    private List<MenuDTO> createMenuDTOList(List<Menu> menuList) {
+    	List<MenuDTO> menuDTOList = new ArrayList<>();
+    	
+    	menuList.forEach(e -> {
+    		menuDTOList.add(
+    				MenuDTO.create(e.getId(), e.getName(), e.getPrice(), e.isIce(), e.isOnSale()));
+    	});
+    	
+    	return menuDTOList;
     }
 }

@@ -31,22 +31,23 @@ public class MenuServiceTests {
         // given
         given(menuRepository.saveAll(anyList())).willAnswer(i -> i.getArguments()[0]);
         final List<MenuDTO> givenMenuDTOList = new ArrayList<>();
-        givenMenuDTOList.add(
-                MenuDTO.create("Americano", 2000, true, true)
-        );
-        givenMenuDTOList.add(
-                MenuDTO.create("Americano", 1500, false, true)
-        );
-        givenMenuDTOList.add(
-                MenuDTO.create("Latte", 2500, true, true)
-        );
-        givenMenuDTOList.add(
-                MenuDTO.create("Latte", 2000, true, true)
-        );
+        givenMenuDTOList.add(MenuDTO.create("Americano", 2000, true, true));
+        givenMenuDTOList.add(MenuDTO.create("Americano", 1500, false, true));
+        givenMenuDTOList.add(MenuDTO.create("Latte", 2500, true, true));
+        givenMenuDTOList.add(MenuDTO.create("Latte", 2000, true, true));
         // when
         int resultCount = menuService.create(givenMenuDTOList);
         // then
         assertEquals(resultCount, givenMenuDTOList.size());
+    }
+    
+    @Test
+    public void search() {
+    	// given
+    	
+    	// when
+    	
+    	// then
     }
 
     @Test
