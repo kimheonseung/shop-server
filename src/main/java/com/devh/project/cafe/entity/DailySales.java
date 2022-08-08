@@ -1,11 +1,5 @@
 package com.devh.project.cafe.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -16,17 +10,18 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 
+import lombok.Builder;
+import lombok.Getter;
+
 @Entity
 @Table(
         uniqueConstraints = @UniqueConstraint(
                 columnNames = {"date", "menu_id"}
-        )
+        ),
+        name = "CAFE_DAILY_SALES"
 )
 @Builder
-@Setter
-@NoArgsConstructor
-@AllArgsConstructor
-@ToString
+@Getter
 public class DailySales {
     @Id @GeneratedValue
     @Column(name = "DAILY_SALES_ID")
@@ -37,6 +32,14 @@ public class DailySales {
     private Menu menu;
     private Long sales;
 
+    public static DailySales create(String date, Menu menu) {
+    	return DailySales.builder()
+    			.date(date)
+    			.menu(menu)
+    			.sales(0L)
+    			.build();
+    }
+    
     public void addSales(long amount) {
         this.sales += amount;
     }

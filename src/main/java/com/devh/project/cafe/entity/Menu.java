@@ -1,11 +1,5 @@
 package com.devh.project.cafe.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -13,17 +7,20 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 
+import lombok.Builder;
+import lombok.Getter;
+import lombok.Setter;
+
 @Entity
 @Table(
         uniqueConstraints = @UniqueConstraint(
                 columnNames = {"name", "ice"}
-                )
+                ),
+        name = "CAFE_MENU"
 )
 @Builder
+@Getter
 @Setter
-@NoArgsConstructor
-@AllArgsConstructor
-@ToString
 public class Menu {
     @Id @GeneratedValue
     @Column(name = "CAFE_MENU_ID")
