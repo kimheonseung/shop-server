@@ -3,6 +3,11 @@
 
 config/mail-config.yml
 config/jwt-config.yml
+config/database-config.yml
+
+docker/mariadb
+docker/redis
+
 ### Eclipse ###
 .metadata
 bin/
