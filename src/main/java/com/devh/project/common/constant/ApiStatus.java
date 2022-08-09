@@ -78,7 +78,8 @@ public class ApiStatus {
         NOT_ENOUGH_STOCK_ERROR("Not enough stock Error", 803, "Not enough stock."),
         UNKNOWN_DISCRIMINATOR_ERROR("Unknown Discriminator Error", 803, "Unknown discriminator."),
         ITEM_ERROR("Item Error", 803, "Item Error."),
-        CAFE_MENU_SERVICE_ERROR("Cafe Menu Service Error", 804, "Cafe menu service error.")
+        CAFE_MENU_SERVICE_ERROR("Cafe Menu Service Error", 804, "Cafe menu service error."),
+        CAFE_ORDER_SERVICE_ERROR("Cafe Order Service Error", 804, "Cafe order service error.")
         ;
 
         private final String status;
