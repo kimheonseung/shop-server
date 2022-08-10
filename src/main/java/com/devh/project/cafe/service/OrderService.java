@@ -4,15 +4,15 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
-import com.devh.project.cafe.constant.OrderStatus;
-import com.devh.project.cafe.exception.CafeMenuServiceException;
-import com.devh.project.cafe.exception.CafeOrderServiceException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import com.devh.project.cafe.constant.OrderStatus;
 import com.devh.project.cafe.entity.DailySales;
 import com.devh.project.cafe.entity.Menu;
 import com.devh.project.cafe.entity.Order;
 import com.devh.project.cafe.entity.OrderMenu;
+import com.devh.project.cafe.exception.CafeOrderServiceException;
 import com.devh.project.cafe.repository.DailySalesRepository;
 import com.devh.project.cafe.repository.MenuRepository;
 import com.devh.project.cafe.repository.OrderRepository;
@@ -22,6 +22,7 @@ import com.devh.project.common.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 
 @Service
+@Transactional
 @RequiredArgsConstructor
 public class OrderService {
 	private final OrderRepository orderRepository;
