@@ -1,0 +1,199 @@
+package com.secuve.modbus.client;
+
+import java.io.IOException;
+import java.net.SocketException;
+import java.net.UnknownHostException;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
+
+import com.secuve.modbus.config.Config;
+
+import de.re.easymodbus.exceptions.ModbusException;
+import de.re.easymodbus.modbusclient.ModbusClient;
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
+public class MClient {
+
+	private Config.Server mServerConfig;
+
+	public MClient(Config config) {
+		this.mServerConfig = config.getServer();
+		init();
+	}
+
+	private final Map<Integer, String> map = new HashMap<>();
+
+	private void init() {
+
+		map.put(0, "a");
+		map.put(1, "b");
+		map.put(2, "hi");
+		map.put(3, "abcdefg");
+		map.put(4, "abcdefghijklmnop");
+
+		final String serverIp = mServerConfig.getIp();
+		final int serverPort = mServerConfig.getPort();
+
+		ModbusClient modbusClient = new ModbusClient(serverIp, serverPort);
+
+		log.info(String.format("Try to connect %s:%d", serverIp, serverPort));
+
+		try {
+			while (!modbusClient.isConnected()) {
+				try {
+					modbusClient.Connect();
+				} catch (IOException e) {
+					Thread.sleep(5000L);
+					log.warn(String.format("Retry to connect %s:%d. Cause: %s", serverIp, serverPort, e.getMessage()));
+				}
+			}
+
+			log.info(String.format("Success to connect %s:%d", serverIp, serverPort));
+
+			new Thread(new PingThread(modbusClient)).start();
+			
+			boolean isSend = false;
+
+			while (!Thread.currentThread().isInterrupted()) {
+				if (!isSend) {
+					try {
+						for (int i = 0; i < 105; ++i) {
+							// function code 16
+							String message = map.get(i % 5);
+							System.out.println("message: " + message);
+							modbusClient.WriteMultipleRegisters(5, ModbusClient.ConvertStringToRegisters(i+message));
+							try {Thread.sleep(14000L);} catch (InterruptedException ignored) {}
+//							System.out.println(ModbusClient.ConvertRegistersToString(modbusClient.ReadHoldingRegisters(11, 2), 0, message.length()));
+						}
+
+//						modbusClient.WriteSingleCoil(0, true);
+//						modbusClient.WriteSingleRegister(0, 1234);
+//						modbusClient.WriteMultipleRegisters(11, ModbusClient.ConvertFloatToTwoRegisters((float) 123.56));
+//						System.out.println(modbusClient.ReadCoils(0, 1)[0]);
+//						System.out.println(modbusClient.ReadHoldingRegisters(0, 1)[0]);
+//						System.out.println(ModbusClient.ConvertRegistersToFloat(modbusClient.ReadHoldingRegisters(11, 2)));
+						isSend = true;
+					} catch (IOException | ModbusException e) {
+						log.warn(String.format("Writing failed. - %s", e.getMessage()));
+					}
+				}
+
+				Thread.sleep(3000L);
+			}
+
+		} catch (InterruptedException ignored) {
+		}
+
+	}
+	
+	private class PingThread implements Runnable {
+
+		private final ModbusClient modbusClient;
+		
+		public PingThread(ModbusClient modbusClient) {
+			this.modbusClient = modbusClient;
+		}
+		
+		@Override
+		public void run() {
+			
+			while(true) {
+				try {
+					modbusClient.WriteSingleCoil(7, true);
+					try {
+						Thread.sleep(1000L);
+					} catch (InterruptedException e) {}
+				} catch (ModbusException | IOException e) {
+					e.printStackTrace();
+				}
+			}
+			
+		}
+		
+	}
+
+	public static void main(String[] args) throws UnknownHostException, SocketException, ModbusException, IOException {
+		System.out.println("[ConvertStringToRegisters] a \n=>"+Arrays.toString(ConvertStringToRegisters("a")));
+		System.out.println("[ConvertStringToRegisters] b \n=>"+Arrays.toString(ConvertStringToRegisters("b")));
+		System.out.println("[ConvertStringToRegisters] hi \n=>"+Arrays.toString(ConvertStringToRegisters("hi")));
+		System.out.println("[ConvertStringToRegisters] abcdefg \n=>"+Arrays.toString(ConvertStringToRegisters("abcdefg")));
+		System.out.println("[ConvertStringToRegisters] abcdefghijklmnop \n=>"+Arrays.toString(ConvertStringToRegisters("abcdefghijklmnop")));
+		
+		System.out.println("[WriteMultipleRegisters] a \n=>"+Arrays.toString(WriteMultipleRegisters(1, ConvertStringToRegisters("a"))));
+		System.out.println("[WriteMultipleRegisters] b \n=>"+Arrays.toString(WriteMultipleRegisters(1, ConvertStringToRegisters("b"))));
+		System.out.println("[WriteMultipleRegisters] hi \n=>"+Arrays.toString(WriteMultipleRegisters(1, ConvertStringToRegisters("hi"))));
+		System.out.println("[WriteMultipleRegisters] abcdefg \n=>"+Arrays.toString(WriteMultipleRegisters(1, ConvertStringToRegisters("abcdefg"))));
+		System.out.println("[WriteMultipleRegisters] abcdefghijklmnop \n=>"+Arrays.toString(WriteMultipleRegisters(1, ConvertStringToRegisters("abcdefghijklmnop"))));
+
+//		System.out.println("[WriteMultipleRegisters] a \n=>"+ConvertRegistersToString(WriteMultipleRegisters(1, ConvertStringToRegisters("a")), 0, 1000);
+//		System.out.println("[WriteMultipleRegisters] b \n=>"+ConvertRegistersToString(WriteMultipleRegisters(1, ConvertStringToRegisters("b")));
+//		System.out.println("[WriteMultipleRegisters] hi \n=>"+ConvertRegistersToString(WriteMultipleRegisters(1, ConvertStringToRegisters("hi")));
+//		System.out.println("[WriteMultipleRegisters] abcdefg \n=>"+ConvertRegistersToString(WriteMultipleRegisters(1, ConvertStringToRegisters("abcdefg")));
+//		System.out.println("[WriteMultipleRegisters] abcdefghijklmnop \n=>"+ConvertRegistersToString(WriteMultipleRegisters(1, ConvertStringToRegisters("abcdefghijklmnop")));
+	}
+
+	public static int[] ConvertStringToRegisters(String stringToConvert) {
+		byte[] array = stringToConvert.getBytes();
+		int[] returnarray = new int[stringToConvert.length() / 2 + stringToConvert.length() % 2];
+		for (int i = 0; i < returnarray.length; i++) {
+			returnarray[i] = array[i * 2];
+			if (i * 2 + 1 < array.length) {
+				returnarray[i] = returnarray[i] | ((int) array[i * 2 + 1] << 8);
+			}
+		}
+		return returnarray;
+	}
+
+	public static byte[] WriteMultipleRegisters(int startingAddress, int[] values)
+			throws de.re.easymodbus.exceptions.ModbusException, UnknownHostException, SocketException, IOException
+	{
+		byte byteCount = (byte) (values.length * 2);
+		byte[] quantityOfOutputs = toByteArray((int) values.length);
+
+		byte[] data = new byte[15 + values.length * 2];
+		
+		data[0] = 0;
+		data[1] = 0;
+		data[2] = 0;
+		data[3] = 0;
+		data[4] = 0;
+		data[5] = 0;
+		data[6] = 0;
+		data[7] = 0;
+		data[8] = 0;
+		data[9] = 0;
+		data[10] = quantityOfOutputs[1];
+		data[11] = quantityOfOutputs[0];
+		data[12] = byteCount;
+		for (int i = 0; i < values.length; i++) {
+			byte[] singleRegisterValue = toByteArray((int) values[i]);
+			data[13 + i * 2] = singleRegisterValue[1];
+			data[14 + i * 2] = singleRegisterValue[0];
+		}
+		
+		return data;
+	}
+
+	public static byte[] toByteArray(int value) {
+		byte[] result = new byte[2];
+		result[1] = (byte) (value >> 8);
+		result[0] = (byte) (value);
+		return result;
+	}
+	
+	public static String ConvertRegistersToString(int[] registers, int offset, int stringLength)
+    { 
+    byte[] result = new byte[stringLength];
+    byte[] registerResult = new byte[2];
+    
+        for (int i = 0; i < stringLength/2; i++)
+        {
+            registerResult = toByteArray(registers[offset + i]);
+            result[i * 2] = registerResult[0];
+            result[i * 2 + 1] = registerResult[1];
+        }
+        return new String(result);
+    }  
+}

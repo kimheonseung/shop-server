@@ -1,0 +1,124 @@
+package com.secuve.modbus.server;
+
+import java.io.IOException;
+import java.util.Arrays;
+
+import com.secuve.modbus.config.Config;
+
+import de.re.easymodbus.modbusclient.ModbusClient;
+import de.re.easymodbus.server.ILogDataChangedDelegator;
+import de.re.easymodbus.server.INumberOfConnectedClientsChangedDelegator;
+import de.re.easymodbus.server.ModbusProtocoll;
+import de.re.easymodbus.server.ModbusServer;
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
+public class MServer {
+	
+	private Config.Server mServerConfig;
+	
+	public MServer(Config config) {
+		this.mServerConfig = config.getServer();
+		init();
+	}
+	
+	private void init() {
+		final int port = mServerConfig.getPort();
+		
+		ModbusServer modbusServer = new ModbusServer();
+		modbusServer.setPort(port);
+		
+		try {
+			modbusServer.Listen();
+			modbusServer.setNotifyLogDataChanged(new ILogDataChangedDelegator() {
+				
+				@Override
+				public void logDataChangedEvent() {
+					System.out.println("Changed ! " + modbusServer.getLogData());
+					ModbusProtocoll[] modbusProtocoll = modbusServer.getLogData();
+					
+					ModbusProtocoll mp = modbusProtocoll[0];
+					if(mp != null) {
+						int[] values = mp.receiveRegisterValues;
+						if(values != null)
+							System.out.println(ModbusClient.ConvertRegistersToString(values, 0, values.length*2));
+					}
+				}
+			});
+			modbusServer.setNotifyNumberOfConnectedClientsChanged(new INumberOfConnectedClientsChangedDelegator() {
+				
+				@Override
+				public void NumberOfConnectedClientsChanged() {
+					System.out.println("Changed "+modbusServer.getNumberOfConnectedClients());
+					
+				}
+			});
+		} catch (IOException e) {
+			log.warn(String.format("Listening failed. - %s", e.getMessage()));
+		}
+		
+//		try {
+//			while(!Thread.currentThread().isInterrupted()) {
+//				
+////				ModbusProtocoll[] modbusProtocoll = modbusServer.getLogData();
+////				
+////				int length = modbusProtocoll.length;
+////				
+////				for(int i = 0 ; i < length ; ++i) {
+////					ModbusProtocoll mp = modbusProtocoll[i];
+////					if(mp != null) {
+////						int[] values = mp.receiveRegisterValues;
+//////						System.out.printf(
+//////								order+" ======================================\n"
+//////								+ "byteCount: %d\n"
+//////								+ "functionCode: %d\n"
+//////								+ "length: %d\n"
+//////								+ "protocolIdentifier: %d\n"
+//////								+ "quantity: %d\n"
+//////								+ "receivedCoilValues: %s\n"
+//////								+ "receiveRegisterValues: %s\n"
+//////								+ "isRequest: %b\n"
+//////								+ "isResponse: %b\n"
+//////								+ "startingAddress: %d\n"
+//////								+ "transactionIdentifier: %d\n",
+//////								mp.byteCount, mp.functionCode, mp.length, 
+//////								mp.protocolIdentifier, mp.quantity, Arrays.toString(mp.receiveCoilValues),
+//////								Arrays.toString(mp.receiveRegisterValues), mp.request, mp.response, mp.startingAdress,
+//////								mp.transactionIdentifier);
+////						if(values != null)
+////							System.out.println(ModbusClient.ConvertRegistersToString(values, 0, values.length*2));
+////					}
+////				}
+//				
+////				ModbusProtocoll mp = modbusProtocoll[order];
+////				if(mp != null) {
+////					int[] values = mp.receiveRegisterValues;
+////					System.out.printf(
+////							order+" ======================================\n"
+////							+ "byteCount: %d\n"
+////							+ "functionCode: %d\n"
+////							+ "length: %d\n"
+////							+ "protocolIdentifier: %d\n"
+////							+ "quantity: %d\n"
+////							+ "receivedCoilValues: %s\n"
+////							+ "receiveRegisterValues: %s\n"
+////							+ "isRequest: %b\n"
+////							+ "isResponse: %b\n"
+////							+ "startingAddress: %d\n"
+////							+ "transactionIdentifier: %d\n",
+////							mp.byteCount, mp.functionCode, mp.length, 
+////							mp.protocolIdentifier, mp.quantity, Arrays.toString(mp.receiveCoilValues),
+////							Arrays.toString(mp.receiveRegisterValues), mp.request, mp.response, mp.startingAdress,
+////							mp.transactionIdentifier);
+////					if(values != null)
+////						System.out.println(ModbusClient.ConvertRegistersToString(values, 0, values.length));
+////					
+////					order++;
+////				}
+//				
+//				
+//				Thread.sleep(10L);
+//			}
+//		} catch (InterruptedException ignored) { }
+	}
+}
