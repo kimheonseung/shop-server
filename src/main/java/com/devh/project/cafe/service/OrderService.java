@@ -7,6 +7,7 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.devh.project.cafe.constant.OrderStatus;
 import com.devh.project.cafe.entity.DailySales;
 import com.devh.project.cafe.entity.Menu;
 import com.devh.project.cafe.entity.Order;
@@ -90,6 +91,9 @@ public class OrderService {
 	}
 
 	public boolean delete(Long orderId) {
+		Order order = orderRepository.findById(orderId).orElseThrow();
+		if(!OrderStatus.CANCELED.equals(order.getStatus()))
+			throw new CafeOrderServiceException("진행중인 주문은 삭제할 수 없습니다.");
 		orderRepository.deleteById(orderId);
 		return true;
 	}
@@ -99,6 +103,7 @@ public class OrderService {
 		order.cancel();
 		
 		final String date = order.getDate().substring(0, 10);
+		
 		List<OrderMenu> orderMenuList = order.getOrderMenuList();
 		orderMenuList.forEach(orderMenu -> {
 			DailySales dailySales = dailySalesRepository.findByDateAndMenu(date, orderMenu.getMenu()).orElseThrow();
