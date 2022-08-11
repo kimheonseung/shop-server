@@ -93,7 +93,7 @@ public class OrderService {
 	public boolean delete(Long orderId) {
 		Order order = orderRepository.findById(orderId).orElseThrow();
 		if(!OrderStatus.CANCELED.equals(order.getStatus()))
-			throw new CafeOrderServiceException("진행중인 주문은 삭제할 수 없습니다.");
+			throw new CafeOrderServiceException("취소된 주문만 삭제할 수 있습니다.");
 		orderRepository.deleteById(orderId);
 		return true;
 	}
