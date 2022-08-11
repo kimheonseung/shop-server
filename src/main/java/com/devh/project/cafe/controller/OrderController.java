@@ -1,5 +1,12 @@
 package com.devh.project.cafe.controller;
 
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.devh.project.cafe.dto.OrderCancelRequestDTO;
+import com.devh.project.cafe.dto.OrderCancelResponseDTO;
 import com.devh.project.cafe.dto.OrderCreateRequestDTO;
 import com.devh.project.cafe.dto.OrderCreateResponseDTO;
 import com.devh.project.cafe.dto.OrderDeleteRequestDTO;
@@ -7,12 +14,9 @@ import com.devh.project.cafe.dto.OrderDeleteResponseDTO;
 import com.devh.project.cafe.service.OrderService;
 import com.devh.project.common.constant.ApiStatus;
 import com.devh.project.common.dto.ApiResponseDTO;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
 
 @RequestMapping("/cafe/order")
 @RestController
@@ -33,5 +37,13 @@ public class OrderController {
         log.info("/cafe/order/delete ... "+orderDeleteRequestDTO);
         boolean result = orderService.delete(orderDeleteRequestDTO.getId());
         return ApiResponseDTO.success(ApiStatus.Success.OK, OrderDeleteResponseDTO.builder().result(result).build());
+    }
+    
+    @PostMapping("/cancel")
+    public ApiResponseDTO<OrderCancelResponseDTO> cancelOrder(@RequestBody OrderCancelRequestDTO orderCancelRequestDTO) {
+    	log.info("/cafe/order/cancel ... "+orderCancelRequestDTO);
+    	boolean result = orderService.cancel(orderCancelRequestDTO.getId());
+    	return ApiResponseDTO.success(ApiStatus.Success.OK, OrderCancelResponseDTO.builder().result(result).build());
+    	
     }
 }

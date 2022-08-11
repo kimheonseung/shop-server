@@ -47,4 +47,7 @@ public class DailySales {
     public void addSales(long amount) {
         this.sales += amount;
     }
+    public void cancelSales(long amount) {
+    	this.sales -= amount;
+    }
 }

@@ -1,5 +1,6 @@
 package com.devh.project.cafe.entity;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,8 +16,10 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 import com.devh.project.cafe.constant.OrderStatus;
+import com.devh.project.cafe.exception.CafeOrderServiceException;
 import com.devh.project.common.entity.Member;
 
 import lombok.AllArgsConstructor;
@@ -31,6 +34,10 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Order {
+	
+	@Transient
+	private static final SimpleDateFormat DF = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
+	
 	@Id @GeneratedValue
 	@Column(name = "CAFE_ORDER_ID")
 	private Long id;
@@ -39,12 +46,14 @@ public class Order {
 	@JoinColumn(name = "MEMBER_ID")
 	private Member member;
 	
-	@OneToMany(mappedBy = "menu", cascade = CascadeType.ALL)
+	@OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
 	private final List<OrderMenu> orderMenuList = new ArrayList<>();
 	
 	@Enumerated(EnumType.STRING)
 	private OrderStatus status;
 
+	private String date;
+	
 	public void setStatus(OrderStatus status) {
 		this.status = status;
 	}
@@ -56,6 +65,7 @@ public class Order {
 			order.addOrderMenu(orderMenu);
 		}
 		order.setStatus(OrderStatus.ORDERED);
+		order.setDate(DF.format(System.currentTimeMillis()));
 		return order;
 	}
 	
@@ -66,5 +76,10 @@ public class Order {
 	public void addOrderMenu(OrderMenu orderMenu) {
 		orderMenuList.add(orderMenu);
 		orderMenu.setOrder(this);
+	}
+	public void cancel() {
+		if(!OrderStatus.ORDERED.equals(this.getStatus()))
+			throw new CafeOrderServiceException("취소할 수 없는 주문 상태입니다.");
+		this.setStatus(OrderStatus.CANCELED);
 	}
 }
