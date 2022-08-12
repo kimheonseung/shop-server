@@ -1,9 +1,7 @@
 package com.devh.project.cafe.service;
 
 import com.devh.project.cafe.dto.MenuDTO;
-import com.devh.project.cafe.dto.MenuTopDTO;
 import com.devh.project.cafe.entity.Menu;
-import com.devh.project.cafe.repository.DailySalesRepository;
 import com.devh.project.cafe.repository.MenuRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -11,18 +9,13 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
-import java.text.SimpleDateFormat;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
 
 @Service
 @RequiredArgsConstructor
 public class MenuService {
-	private final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
     private final MenuRepository menuRepository;
-    private final DailySalesRepository dailySalesRepository;
 
     public int create(List<MenuDTO> menuDTOList) {
         StringBuilder sbAudit = new StringBuilder();
@@ -53,15 +46,6 @@ public class MenuService {
         return true;
     }
 
-    public List<MenuTopDTO> searchTop(int days, int top) {
-    	List<MenuTopDTO> menuTopDTOList = new ArrayList<>();
-    	final String date = sdf.format(
-    			LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant().toEpochMilli()
-    	);
-//    	dailySalesRepository.find
-    	return menuTopDTOList;
-    }
-    
     private void update(Menu entity, MenuDTO dto) {
         entity.setPrice(dto.getPrice());
         entity.setOnSale(dto.isOnSale());

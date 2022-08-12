@@ -1,8 +1,14 @@
 package com.devh.project.cafe.service;
 
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
+import com.devh.project.cafe.dto.DailySalesAggregationDTO;
+import com.devh.project.cafe.projection.DailySalesAggregationProjection;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -31,5 +37,15 @@ public class DailySalesService {
         dailySales.addSales(amount);
         
         return dailySales.getSales() == before + amount;
+    }
+
+    public List<DailySalesAggregationProjection> top(int days, int top) {
+        List<DailySalesAggregationDTO> dailySalesAggregationDTOList = new ArrayList<>();
+        final String date = sdf.format(
+                LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant().toEpochMilli()
+        );
+        return dailySalesRepository.aggregateByDateGreaterThanEqual(date, top);
+
+//    	return dailySalesAggregationDTOList;
     }
 }

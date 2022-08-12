@@ -7,6 +7,7 @@ import lombok.ToString;
 @Getter
 @Setter
 @ToString
-public class MenuTopDTO {
-
+public class DailySalesAggregationDTO {
+    MenuDTO menu;
+    Long sales;
 }
