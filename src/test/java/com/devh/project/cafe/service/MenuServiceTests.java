@@ -92,4 +92,14 @@ public class MenuServiceTests {
         // then
         assertTrue(result);
     }
+    
+    @Test
+    public void searchTop() {
+    	// given
+    	final int givenDays = 7;
+    	final int givenTop = 3;
+    	// when
+    	menuService.searchTop(givenDays, givenTop);
+    	// then
+    }
 }
