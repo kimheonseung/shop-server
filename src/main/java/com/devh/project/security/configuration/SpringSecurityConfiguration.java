@@ -3,12 +3,15 @@ package com.devh.project.security.configuration;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
+
+import com.devh.project.security.constant.Role;
 
 @Configuration
 public class SpringSecurityConfiguration {
@@ -21,6 +24,8 @@ public class SpringSecurityConfiguration {
 	private AccessDeniedHandler accessDeniedHandler;
 	@Autowired
 	private AuthenticationEntryPoint authenticationEntryPoint;
+	@Autowired
+	private AuthenticationProvider authenticationProvider;
 	
 	// Configuring HttpSecurity
 	@Bean
@@ -35,12 +40,14 @@ public class SpringSecurityConfiguration {
 				.successHandler(authenticationSuccessHandler)
 				.permitAll()
 				.and()
+			.authenticationProvider(authenticationProvider)
             .exceptionHandling()
             	.accessDeniedHandler(accessDeniedHandler)
             	.authenticationEntryPoint(authenticationEntryPoint)
             	.and()
 			.authorizeHttpRequests((authz) -> authz
 					.antMatchers("/logout", "/refresh", "/admin").authenticated()
+					.antMatchers("/cafe").hasRole(Role.CAFE_USER.toString())
 					.anyRequest().permitAll());
 		return http.build();
 	}
