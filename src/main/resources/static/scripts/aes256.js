@@ -47,7 +47,7 @@ const aes256Service = () => {
       keySize: 256 / 32,
       iterations: 1000
     });
-    const encrypted = CryptoJS.AES.encrypt(CryptoJS.enc.Utf8.parse("test"), key256Bits, {
+    const encrypted = CryptoJS.AES.encrypt(CryptoJS.enc.Utf8.parse(str), key256Bits, {
       iv: iv,
       mode: CryptoJS.mode.CBC,
       padding: CryptoJS.pad.Pkcs7
