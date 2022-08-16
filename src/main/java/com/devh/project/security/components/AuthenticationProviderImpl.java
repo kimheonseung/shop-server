@@ -1,4 +1,4 @@
-package com.devh.project.security.authentication;
+package com.devh.project.security.components;
 
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
@@ -29,17 +29,22 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @Component
-@Slf4j
 @RequiredArgsConstructor
+@Slf4j
 public class AuthenticationProviderImpl implements AuthenticationProvider {
-
-    private final UserDetailsService userDetailsService;
-    private final PasswordEncoder passwordEncoder;
-    private final AES256Helper aes256Helper;
-
-    @Override
-    public Authentication authenticate(Authentication authentication) throws AuthenticationException {
-        log.info("try to login... "+authentication);
+	
+	private final UserDetailsService userDetailsService;
+	private final PasswordEncoder passwordEncoder;
+	private final AES256Helper aes256Helper;
+	
+	@Override
+	public boolean supports(Class<?> authentication) {
+		return authentication.equals(UsernamePasswordAuthenticationToken.class);
+	}
+	
+	@Override
+	public Authentication authenticate(Authentication authentication) throws AuthenticationException {
+		log.info("try to login... "+authentication);
         final String username = (authentication.getPrincipal() != null) ? authentication.getName() : "";
         String password;
 		try {
@@ -65,10 +70,5 @@ public class AuthenticationProviderImpl implements AuthenticationProvider {
         final UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(userDetails.getUsername(), userDetails.getPassword());
         token.setDetails(authentication.getDetails());
         return token;
-    }
-
-    @Override
-    public boolean supports(Class<?> authentication) {
-        return authentication.equals(UsernamePasswordAuthenticationToken.class);
-    }
+	}
 }

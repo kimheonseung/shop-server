@@ -1,56 +1,26 @@
 package com.devh.project.security.configuration;
 
-import com.devh.project.common.constant.ApiStatus.AuthError;
-import com.devh.project.common.dto.ApiResponseDTO;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
-
-import javax.servlet.http.HttpServletResponse;
+import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 
 @Configuration
 public class SpringSecurityConfiguration {
 
-	private final ObjectMapper objectMapper = new ObjectMapper().registerModule(new JavaTimeModule());
-	
 	@Autowired
 	private AuthenticationFailureHandler authenticationFailureHandler;
-	
-	@Bean
-	public PasswordEncoder passwordEncoder() {
-		return new BCryptPasswordEncoder();
-	}
-
-	@Bean
-    public AccessDeniedHandler accessDeniedHandler() {
-        return (request, response, e) -> {
-            response.setStatus(HttpServletResponse.SC_FORBIDDEN);
-            response.setContentType("application/json;charset=UTF-8");
-            response.getWriter().write(objectMapper.writeValueAsString(ApiResponseDTO.authError(AuthError.ACCESS_DENIED)));
-            response.getWriter().flush();
-            response.getWriter().close();
-        };
-    }
-
-    @Bean
-    public AuthenticationEntryPoint authenticationEntryPoint() {
-        return (request, response, e) -> {
-            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-            response.setContentType("application/json;charset=UTF-8");
-            response.getWriter().write(objectMapper.writeValueAsString(ApiResponseDTO.authError(AuthError.UNAUTHORIZED)));
-            response.getWriter().flush();
-            response.getWriter().close();
-        };
-    }
+	@Autowired
+	private AuthenticationSuccessHandler authenticationSuccessHandler;
+	@Autowired
+	private AccessDeniedHandler accessDeniedHandler;
+	@Autowired
+	private AuthenticationEntryPoint authenticationEntryPoint;
 	
 	// Configuring HttpSecurity
 	@Bean
@@ -62,13 +32,13 @@ public class SpringSecurityConfiguration {
 				.passwordParameter("password")
 				.loginPage("/login")
 				.failureHandler(authenticationFailureHandler)
-//				.loginProcessingUrl("/login")
+				.successHandler(authenticationSuccessHandler)
 				.permitAll()
 				.and()
-//            .exceptionHandling()
-//            	.accessDeniedHandler(accessDeniedHandler())
-//            	.authenticationEntryPoint(authenticationEntryPoint())
-//            	.and()
+            .exceptionHandling()
+            	.accessDeniedHandler(accessDeniedHandler)
+            	.authenticationEntryPoint(authenticationEntryPoint)
+            	.and()
 			.authorizeHttpRequests((authz) -> authz
 					.antMatchers("/logout", "/refresh", "/admin").authenticated()
 					.anyRequest().permitAll());
@@ -97,5 +67,6 @@ public class SpringSecurityConfiguration {
 //				.build();
 //		return new InMemoryUserDetailsManager(testUser, adminUser);
 //	}
+	
 	
 }

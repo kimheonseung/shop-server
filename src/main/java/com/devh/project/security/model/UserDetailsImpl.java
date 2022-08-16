@@ -1,20 +1,20 @@
-package com.devh.project.security.userdetails;
+package com.devh.project.security.model;
+
+import java.util.Collection;
+
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
-
-import java.util.Collection;
 
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
 public class UserDetailsImpl implements UserDetails {
-
 	private static final long serialVersionUID = 5847157464990380735L;
 
 	private Long id;
@@ -63,5 +63,4 @@ public class UserDetailsImpl implements UserDetails {
 	public boolean isEnabled() {
 		return true;
 	}
-
 }
