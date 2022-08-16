@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+	  xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+	  xmlns="http://www.w3.org/1999/html">
+<head>
+    <meta charset="UTF-8">
+    <title>Login</title>
+</head>
+<!--<link type="text/css" th:href="@{/css/loading.css}" rel="stylesheet"/>-->
+<script th:src="@{/lib/axios.min.js}"></script>
+<script th:src="@{/lib/cryptojs.min.js}"></script>
+<script th:src="@{/scripts/aes256.js}"></script>
+<script type="text/javascript">
+
+const key = "[[${aesKey}]]";
+document.addEventListener("DOMContentLoaded", (evt) => {
+	if(window.location.search.substring(1) === 'error') {
+		alert('login failed.');
+	}
+	document.getElementById('login-form').addEventListener('submit', (e) => {
+		e.preventDefault();
+		document.getElementById('password').value = aes256Service().encrypt(document.getElementById('password').value);
+		document.getElementById('login-form').submit();
+	});
+});
+</script>
+<body>
+<div class="wrap flex_center width_100">
+	<!--ROLE_USER 권한을 갖는다면 이 글이 보임-->
+	<h1 sec:authorize="hasRole('ADMIN')">Has admin Role</h1>
+
+	<!--ROLE_ADMIN 권한을 갖는다면 이 글이 보임-->
+	<h1 sec:authorize="hasRole('USER')">Has user Role</h1>
+
+	<!--ROLE_CAFE_USER 권한을 갖는다면 이 글이 보임-->
+	<h1 sec:authorize="hasRole('CAFE_USER')">Has cafe user Role</h1>
+
+	<!--어떤 권한이건 상관없이 인증이 되었다면 이 글이 보임-->
+	<div sec:authorize="isAuthenticated()">
+		Only Authenticated user can see this Text
+	</div>
+
+	<!--인증시 사용된 객체에 대한 정보-->
+	<b>Authenticated DTO:</b>
+	<div sec:authentication="principal"></div>
+
+	<!--인증시 사용된 객체의 Username (ID)-->
+	<b>Authenticated username:</b>
+	<div sec:authentication="name"></div>
+
+	<!--객체의 권한-->
+	<b>Authenticated user role:</b>
+	<div sec:authorize="isAuthenticated()" sec:authentication="principal.authorities"></div>
+</div>
+</body>
+</html>

@@ -11,7 +11,7 @@ import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 
-import com.devh.project.security.constant.Role;
+import com.devh.project.common.constant.Role;
 
 @Configuration
 public class SpringSecurityConfiguration {

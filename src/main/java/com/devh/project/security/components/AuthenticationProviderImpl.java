@@ -66,8 +66,8 @@ public class AuthenticationProviderImpl implements AuthenticationProvider {
      		throw new LockedException(username);
      	else if(!userDetails.isCredentialsNonExpired())
      		throw new CredentialsExpiredException(username);
-        
-        final UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(userDetails.getUsername(), userDetails.getPassword());
+
+        final UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(userDetails, userDetails.getPassword(), userDetails.getAuthorities());
         token.setDetails(authentication.getDetails());
         return token;
 	}

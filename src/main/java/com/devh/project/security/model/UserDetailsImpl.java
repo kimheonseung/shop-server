@@ -1,31 +1,43 @@
 package com.devh.project.security.model;
 
-import java.util.Collection;
-
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
-
+import com.devh.project.common.constant.Role;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
 
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
+@ToString
 public class UserDetailsImpl implements UserDetails {
 	private static final long serialVersionUID = 5847157464990380735L;
 
 	private Long id;
 	private String username;
 	private String password;
-	private Collection<? extends GrantedAuthority> authorities;
-	
+	@Builder.Default
+	private final Set<Role> roles = new HashSet<>();
+
+	public void addRole(Role role) {
+		this.roles.add(role);
+	}
+
 	// 권한 목록
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
-		return this.authorities;
+		Set<SimpleGrantedAuthority> simpleGrantedAuthorities = new HashSet<>();
+		roles.forEach(role -> simpleGrantedAuthorities.add(new SimpleGrantedAuthority(role.toString())));
+		return simpleGrantedAuthorities;
 	}
 
 	// 비밀번호
