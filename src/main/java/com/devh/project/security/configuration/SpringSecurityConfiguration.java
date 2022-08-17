@@ -57,8 +57,7 @@ public class SpringSecurityConfiguration {
             	.antMatchers("/cafe").hasAnyAuthority(AuthType.CAFE_USER.toString())
             	.antMatchers("/test").authenticated()
             	.and()
-            .addFilterBefore(new JwtFilter(jwtHelper), UsernamePasswordAuthenticationFilter.class)
-            	;
+            .addFilterBefore(new JwtFilter(jwtHelper), UsernamePasswordAuthenticationFilter.class);
 //			.authorizeHttpRequests((authz) -> authz
 //					.antMatchers("/logout", "/refresh", "/admin").authenticated()
 //					.antMatchers("/cafe").hasRole(Role.ROLE_CAFE_USER.toString())

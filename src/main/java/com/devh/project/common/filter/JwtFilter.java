@@ -27,7 +27,6 @@ public class JwtFilter extends OncePerRequestFilter {
 		if(token != null && jwtHelper.validateToken(token)) {
 			// TODO: redis에서 accessToken logout 확인
 			Authentication authentication = jwtHelper.getAuthenticationByToken(token);
-			System.out.println(authentication.getAuthorities());
 			SecurityContextHolder.getContext().setAuthentication(authentication);
 		}
 		
