@@ -1,6 +1,6 @@
 package com.devh.project.common.entity;
 
-import com.devh.project.common.constant.Role;
+import com.devh.project.common.constant.AuthType;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -19,5 +19,5 @@ public class Authority {
     private Long id;
     @Column(nullable = false, unique = true)
     @Enumerated(EnumType.STRING)
-    private Role role;
+    private AuthType authType;
 }

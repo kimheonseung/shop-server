@@ -1,10 +1,11 @@
-package com.devh.project.security.signup.controller;
+package com.devh.project.common.controller;
 
 import com.devh.project.common.constant.ApiStatus;
 import com.devh.project.common.dto.ApiResponseDTO;
-import com.devh.project.security.signup.dto.SignUpRequestDTO;
-import com.devh.project.security.signup.dto.SignUpResponseDTO;
-import com.devh.project.security.signup.service.SignUpService;
+import com.devh.project.common.dto.SignUpRequestDTO;
+import com.devh.project.common.dto.SignUpResponseDTO;
+import com.devh.project.common.service.SignUpService;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.GetMapping;

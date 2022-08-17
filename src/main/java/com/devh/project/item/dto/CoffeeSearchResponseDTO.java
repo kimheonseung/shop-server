@@ -1,14 +1,14 @@
 package com.devh.project.item.dto;
 
+import java.util.List;
+
 import com.devh.project.common.dto.PagingDTO;
 import com.devh.project.item.entity.Coffee;
-import com.devh.project.item.entity.Item;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-
-import java.util.List;
 
 @Builder
 @Getter

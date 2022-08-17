@@ -1,7 +1,9 @@
 package com.devh.project.item.exception;
 
 public class NotEnoughStockException extends Exception {
-    public NotEnoughStockException() {
+	private static final long serialVersionUID = -4211006149455534082L;
+
+	public NotEnoughStockException() {
     }
 
     public NotEnoughStockException(String message) {

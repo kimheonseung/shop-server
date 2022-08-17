@@ -30,7 +30,9 @@ import java.util.List;
 @ToString
 public abstract class Item implements Serializable {
 
-    @Id @GeneratedValue
+	private static final long serialVersionUID = 1L;
+
+	@Id @GeneratedValue
     @Column(name = "ITEM_ID")
     private Long id;
 

@@ -1,6 +1,7 @@
-package com.devh.project.security.signup.dto;
+package com.devh.project.common.dto;
 
-import com.devh.project.security.signup.SignUpStatus;
+import com.devh.project.common.constant.SignUpStatus;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;

@@ -1,10 +1,11 @@
-package com.devh.project.security.signup.advice;
+package com.devh.project.common.advice;
 
 import com.devh.project.common.constant.ApiStatus;
 import com.devh.project.common.dto.ApiResponseDTO;
-import com.devh.project.security.signup.exception.DuplicateEmailException;
-import com.devh.project.security.signup.exception.PasswordException;
-import com.devh.project.security.signup.exception.SignUpException;
+import com.devh.project.common.exception.DuplicateEmailException;
+import com.devh.project.common.exception.PasswordException;
+import com.devh.project.common.exception.SignUpException;
+
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 

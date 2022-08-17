@@ -1,4 +1,4 @@
-package com.devh.project.security.signup.dto;
+package com.devh.project.common.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

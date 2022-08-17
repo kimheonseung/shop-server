@@ -28,10 +28,8 @@ import com.devh.project.security.token.exception.TokenNotFoundException;
 
 import io.jsonwebtoken.ExpiredJwtException;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 
 @Service
-@Slf4j
 @Transactional
 @RequiredArgsConstructor
 public class TokenService {

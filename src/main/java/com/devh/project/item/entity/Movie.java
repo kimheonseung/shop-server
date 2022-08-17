@@ -11,6 +11,7 @@ import javax.persistence.Entity;
 @Setter
 @DiscriminatorValue("M")
 public class Movie extends Item {
-    private String director;
+	private static final long serialVersionUID = 2151838464817260268L;
+	private String director;
     private String actor;
 }

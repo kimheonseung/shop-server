@@ -25,7 +25,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 				.username(member.getUsername())
 				.password(member.getPassword())
 				.build();
-		member.getAuthorities().forEach(authority -> userDetails.addRole(authority.getRole()));
+		member.getAuthorities().forEach(authority -> userDetails.addAuthType(authority.getAuthType()));
 		return userDetails;
 	}
 }

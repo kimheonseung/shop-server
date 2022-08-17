@@ -1,4 +1,4 @@
-package com.devh.project.security.signup;
+package com.devh.project.common.constant;
 
 /**
  * <pre>

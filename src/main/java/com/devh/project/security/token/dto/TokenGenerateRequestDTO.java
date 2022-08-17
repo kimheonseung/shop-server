@@ -1,13 +1,12 @@
 package com.devh.project.security.token.dto;
 
+import javax.validation.constraints.NotBlank;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
-
-import javax.validation.constraints.Email;
-import javax.validation.constraints.NotBlank;
 
 @Getter
 @Builder
@@ -15,7 +14,8 @@ import javax.validation.constraints.NotBlank;
 @NoArgsConstructor
 @ToString
 public class TokenGenerateRequestDTO {
-    @Email(message = "Not Valid Email")
+//    @Email(message = "Not Valid Email")
+	@NotBlank(message = "username is mandatory")
     private String username;
     @NotBlank(message = "Password is mandatory")
     private String password;

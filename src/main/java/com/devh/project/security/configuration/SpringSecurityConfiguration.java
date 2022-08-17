@@ -5,50 +5,64 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.access.AccessDeniedHandler;
-import org.springframework.security.web.authentication.AuthenticationFailureHandler;
-import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
-import com.devh.project.common.constant.Role;
+import com.devh.project.common.constant.AuthType;
+import com.devh.project.common.filter.JwtFilter;
+import com.devh.project.common.helper.JwtHelper;
 
 @Configuration
 public class SpringSecurityConfiguration {
 
-	@Autowired
-	private AuthenticationFailureHandler authenticationFailureHandler;
-	@Autowired
-	private AuthenticationSuccessHandler authenticationSuccessHandler;
+//	@Autowired
+//	private AuthenticationFailureHandler authenticationFailureHandler;
+//	@Autowired
+//	private AuthenticationSuccessHandler authenticationSuccessHandler;
 	@Autowired
 	private AccessDeniedHandler accessDeniedHandler;
 	@Autowired
 	private AuthenticationEntryPoint authenticationEntryPoint;
 	@Autowired
 	private AuthenticationProvider authenticationProvider;
+	@Autowired
+	private JwtHelper jwtHelper;
 	
 	// Configuring HttpSecurity
 	@Bean
 	public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 		http
 			.csrf().disable()
-			.formLogin()
-				.usernameParameter("email")
-				.passwordParameter("password")
-				.loginPage("/login")
-				.failureHandler(authenticationFailureHandler)
-				.successHandler(authenticationSuccessHandler)
-				.permitAll()
+			.sessionManagement()
+				.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
 				.and()
+//			.formLogin()
+//				.usernameParameter("email")
+//				.passwordParameter("password")
+//				.loginPage("/login")
+//				.failureHandler(authenticationFailureHandler)
+//				.successHandler(authenticationSuccessHandler)
+//				.permitAll()
+//				.and()
 			.authenticationProvider(authenticationProvider)
             .exceptionHandling()
             	.accessDeniedHandler(accessDeniedHandler)
             	.authenticationEntryPoint(authenticationEntryPoint)
             	.and()
-			.authorizeHttpRequests((authz) -> authz
-					.antMatchers("/logout", "/refresh", "/admin").authenticated()
-					.antMatchers("/cafe").hasRole(Role.CAFE_USER.toString())
-					.anyRequest().permitAll());
+            .authorizeRequests()
+            	.antMatchers("/signup", "/login").permitAll()
+            	.antMatchers("/cafe").hasAnyAuthority(AuthType.CAFE_USER.toString())
+            	.antMatchers("/test").authenticated()
+            	.and()
+            .addFilterBefore(new JwtFilter(jwtHelper), UsernamePasswordAuthenticationFilter.class)
+            	;
+//			.authorizeHttpRequests((authz) -> authz
+//					.antMatchers("/logout", "/refresh", "/admin").authenticated()
+//					.antMatchers("/cafe").hasRole(Role.ROLE_CAFE_USER.toString())
+//					.anyRequest().permitAll());
 		return http.build();
 	}
 	

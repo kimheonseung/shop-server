@@ -17,6 +17,8 @@ public class OrderSpecification {
 	
 	public static Specification<Order> usernameEquals(final String username) {
 		return new Specification<Order>() {
+			private static final long serialVersionUID = 6965833536455236946L;
+
 			@Override
 			public Predicate toPredicate(Root<Order> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) {
 				if(StringUtils.isEmpty(username))
@@ -29,7 +31,9 @@ public class OrderSpecification {
 	
 	public static Specification<Order> usernameLike(final String username) {
         return new Specification<Order>() {
-            @Override
+			private static final long serialVersionUID = -9157494880521689986L;
+
+			@Override
             public Predicate toPredicate(Root<Order> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) {
                 if(StringUtils.isEmpty(username))
                     return null;
@@ -41,7 +45,9 @@ public class OrderSpecification {
 
     public static Specification<Order> orderStatusEquals(final OrderStatus status) {
         return new Specification<Order>() {
-            @Override
+			private static final long serialVersionUID = -8622744837061743212L;
+
+			@Override
             public Predicate toPredicate(Root<Order> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) {
                 if(status == null)
                     return null;

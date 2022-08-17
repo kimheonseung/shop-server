@@ -1,13 +1,14 @@
-package com.devh.project.security.signup.aspect;
+package com.devh.project.common.aspect;
 
-import com.devh.project.security.signup.exception.DuplicateEmailException;
-import com.devh.project.security.signup.exception.PasswordException;
-import com.devh.project.security.signup.exception.SignUpException;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
 import org.springframework.stereotype.Component;
+
+import com.devh.project.common.exception.DuplicateEmailException;
+import com.devh.project.common.exception.PasswordException;
+import com.devh.project.common.exception.SignUpException;
 
 @Aspect
 @Component

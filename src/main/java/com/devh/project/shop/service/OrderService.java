@@ -1,28 +1,24 @@
 package com.devh.project.shop.service;
 
-import com.devh.project.common.entity.Member;
-import com.devh.project.common.repository.MemberRepository;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import com.devh.project.shop.dto.OrderCancelRequestDTO;
 import com.devh.project.shop.dto.OrderCancelResponseDTO;
 import com.devh.project.shop.dto.OrderCreateRequestDTO;
 import com.devh.project.shop.dto.OrderCreateResponseDTO;
 import com.devh.project.shop.dto.OrderSearchRequestDTO;
 import com.devh.project.shop.dto.OrderSearchResponseDTO;
-import com.devh.project.shop.entity.Delivery;
-import com.devh.project.shop.entity.Order;
-import com.devh.project.shop.entity.OrderItem;
-import com.devh.project.item.entity.Item;
 import com.devh.project.shop.repository.OrderRepository;
+
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
 @Transactional
 public class OrderService {
     private final OrderRepository orderRepository;
-    private final MemberRepository memberRepository;
+//    private final MemberRepository memberRepository;
 //    private final ItemRepository itemRepository;
 
     public OrderCreateResponseDTO create(OrderCreateRequestDTO orderCreateRequestDTO) {

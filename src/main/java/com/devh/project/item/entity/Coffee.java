@@ -17,5 +17,6 @@ import javax.persistence.Entity;
 @DiscriminatorValue("C")
 @ToString(callSuper = true)
 public class Coffee extends Item {
-    private boolean ice;
+	private static final long serialVersionUID = -5991661082734359580L;
+	private boolean ice;
 }

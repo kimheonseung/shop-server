@@ -1,6 +1,12 @@
-package com.devh.project.security.signup.service;
+package com.devh.project.common.service;
 
 import com.devh.project.common.entity.RedisMember;
+import com.devh.project.common.exception.DuplicateEmailException;
+import com.devh.project.common.exception.PasswordException;
+import com.devh.project.common.exception.SignUpException;
+import com.devh.project.common.constant.SignUpStatus;
+import com.devh.project.common.dto.SignUpRequestDTO;
+import com.devh.project.common.dto.SignUpResponseDTO;
 import com.devh.project.common.entity.Member;
 import com.devh.project.common.helper.AES256Helper;
 import com.devh.project.common.helper.AuthKeyHelper;
@@ -8,12 +14,7 @@ import com.devh.project.common.helper.BCryptHelper;
 import com.devh.project.common.helper.MailHelper;
 import com.devh.project.common.repository.RedisMemberRepository;
 import com.devh.project.common.repository.MemberRepository;
-import com.devh.project.security.signup.SignUpStatus;
-import com.devh.project.security.signup.dto.SignUpRequestDTO;
-import com.devh.project.security.signup.dto.SignUpResponseDTO;
-import com.devh.project.security.signup.exception.DuplicateEmailException;
-import com.devh.project.security.signup.exception.PasswordException;
-import com.devh.project.security.signup.exception.SignUpException;
+
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;

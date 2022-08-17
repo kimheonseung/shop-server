@@ -14,7 +14,9 @@ import javax.persistence.criteria.Root;
 public class OrderSpec {
     public static Specification<Order> usernameEquals(final String username) {
         return new Specification<Order>() {
-            @Override
+			private static final long serialVersionUID = 2061810494967884232L;
+
+			@Override
             public Predicate toPredicate(Root<Order> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) {
                 if(StringUtils.isEmpty(username))
                     return null;
@@ -26,7 +28,9 @@ public class OrderSpec {
 
     public static Specification<Order> usernameLike(final String username) {
         return new Specification<Order>() {
-            @Override
+			private static final long serialVersionUID = -959666549489851020L;
+
+			@Override
             public Predicate toPredicate(Root<Order> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) {
                 if(StringUtils.isEmpty(username))
                     return null;
@@ -38,7 +42,9 @@ public class OrderSpec {
 
     public static Specification<Order> orderStatusEquals(final Order.Status status) {
         return new Specification<Order>() {
-            @Override
+			private static final long serialVersionUID = -6387963554330013198L;
+
+			@Override
             public Predicate toPredicate(Root<Order> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) {
                 if(status == null)
                     return null;

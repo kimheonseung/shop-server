@@ -3,17 +3,15 @@ package com.devh.project.cafe.service;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import com.devh.project.cafe.dto.DailySalesAggregationDTO;
-import com.devh.project.cafe.projection.DailySalesAggregationProjection;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.devh.project.cafe.entity.DailySales;
 import com.devh.project.cafe.entity.Menu;
+import com.devh.project.cafe.projection.DailySalesAggregationProjection;
 import com.devh.project.cafe.repository.DailySalesRepository;
 import com.devh.project.cafe.repository.MenuRepository;
 
@@ -40,7 +38,6 @@ public class DailySalesService {
     }
 
     public List<DailySalesAggregationProjection> top(int days, int top) {
-        List<DailySalesAggregationDTO> dailySalesAggregationDTOList = new ArrayList<>();
         final String date = sdf.format(
                 LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant().toEpochMilli()
         );

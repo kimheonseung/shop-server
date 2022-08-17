@@ -1,5 +1,5 @@
 database: mariadb
 driverClassName: org.mariadb.jdbc.Driver
-url: jdbc:mariadb://localhost:3306/jav
-username: jav
-password: jav
+url: jdbc:mariadb://localhost:3306/shop
+username: shop
+password: shop

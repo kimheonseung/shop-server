@@ -1,6 +1,6 @@
 package com.devh.project.common.dto;
 
-import com.devh.project.common.constant.Role;
+import com.devh.project.common.constant.AuthType;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -14,5 +14,5 @@ import java.util.Set;
 public class MemberDTO {
     private Long id;
     private String username;
-    private Set<Role> roles = new HashSet<>();
+    private Set<AuthType> authTypes = new HashSet<>();
 }

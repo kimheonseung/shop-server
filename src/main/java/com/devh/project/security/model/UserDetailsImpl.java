@@ -1,6 +1,6 @@
 package com.devh.project.security.model;
 
-import com.devh.project.common.constant.Role;
+import com.devh.project.common.constant.AuthType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -26,17 +26,17 @@ public class UserDetailsImpl implements UserDetails {
 	private String username;
 	private String password;
 	@Builder.Default
-	private final Set<Role> roles = new HashSet<>();
+	private final Set<AuthType> authTypes = new HashSet<>();
 
-	public void addRole(Role role) {
-		this.roles.add(role);
+	public void addAuthType(AuthType authType) {
+		this.authTypes.add(authType);
 	}
 
 	// 권한 목록
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
 		Set<SimpleGrantedAuthority> simpleGrantedAuthorities = new HashSet<>();
-		roles.forEach(role -> simpleGrantedAuthorities.add(new SimpleGrantedAuthority(role.toString())));
+		authTypes.forEach(authType -> simpleGrantedAuthorities.add(new SimpleGrantedAuthority(authType.toString())));
 		return simpleGrantedAuthorities;
 	}
 

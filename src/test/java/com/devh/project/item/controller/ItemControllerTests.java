@@ -1,9 +1,8 @@
 package com.devh.project.item.controller;
 
-import com.devh.project.item.dto.CoffeeSearchRequestDTO;
-import com.devh.project.item.entity.Coffee;
-import com.devh.project.item.repository.CoffeeRepository;
-import com.devh.project.item.service.CoffeeService;
+import java.util.ArrayList;
+import java.util.List;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -12,8 +11,9 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.List;
+import com.devh.project.item.entity.Coffee;
+import com.devh.project.item.repository.CoffeeRepository;
+import com.devh.project.item.service.CoffeeService;
 
 @ExtendWith(MockitoExtension.class)
 @Transactional
@@ -94,12 +94,12 @@ public class ItemControllerTests {
     @Test
     public void getCoffee() throws Exception {
         // given
-        final int givenPage = 1;
-        final int givenSize = 3;
-        CoffeeSearchRequestDTO givenCoffeeSearchRequestDTO = CoffeeSearchRequestDTO.builder()
-                .page(givenPage)
-                .size(givenSize)
-                .build();
+//        final int givenPage = 1;
+//        final int givenSize = 3;
+//        CoffeeSearchRequestDTO givenCoffeeSearchRequestDTO = CoffeeSearchRequestDTO.builder()
+//                .page(givenPage)
+//                .size(givenSize)
+//                .build();
 //        MockHttpServletRequest mockRequest = new MockHttpServletRequest();
 //        RequestContextHolder.setRequestAttributes(new ServletRequestAttributes(mockRequest));
 //        mockRequest.addParameter("page", "1");

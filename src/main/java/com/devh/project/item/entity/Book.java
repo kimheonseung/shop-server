@@ -11,6 +11,7 @@ import javax.persistence.Entity;
 @Setter
 @DiscriminatorValue("B")
 public class Book extends Item {
-    private String author;
+	private static final long serialVersionUID = -2268922152488135700L;
+	private String author;
     private String isbn;
 }
