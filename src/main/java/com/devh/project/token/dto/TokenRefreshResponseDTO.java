@@ -1,6 +1,6 @@
-package com.devh.project.security.token.dto;
+package com.devh.project.token.dto;
 
-import com.devh.project.security.token.Token;
+import com.devh.project.token.model.Token;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;

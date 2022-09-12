@@ -18,8 +18,8 @@ import org.springframework.stereotype.Component;
 import com.devh.project.common.constant.AuthType;
 import com.devh.project.common.util.ExceptionUtils;
 import com.devh.project.security.model.UserDetailsImpl;
-import com.devh.project.security.token.Token;
-import com.devh.project.security.token.TokenStatus;
+import com.devh.project.token.model.Token;
+import com.devh.project.token.constant.TokenStatus;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;

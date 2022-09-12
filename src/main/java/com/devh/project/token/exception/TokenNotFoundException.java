@@ -1,4 +1,4 @@
-package com.devh.project.security.token.exception;
+package com.devh.project.token.exception;
 
 public class TokenNotFoundException extends IllegalArgumentException {
 	private static final long serialVersionUID = -5938104993227201367L;

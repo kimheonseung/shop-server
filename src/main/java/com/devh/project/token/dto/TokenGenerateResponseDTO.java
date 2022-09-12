@@ -1,6 +1,6 @@
-package com.devh.project.security.token.dto;
+package com.devh.project.token.dto;
 
-import com.devh.project.security.token.Token;
+import com.devh.project.token.model.Token;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -12,6 +12,6 @@ import lombok.ToString;
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
-public class TokenRefreshRequestDTO {
-	private Token token;
+public class TokenGenerateResponseDTO {
+    private Token token;
 }

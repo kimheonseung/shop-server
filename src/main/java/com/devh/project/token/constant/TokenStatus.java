@@ -1,4 +1,4 @@
-package com.devh.project.security.token;
+package com.devh.project.token.constant;
 
 public enum TokenStatus {
     INVALID,

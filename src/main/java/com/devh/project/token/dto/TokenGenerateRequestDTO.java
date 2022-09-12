@@ -1,4 +1,4 @@
-package com.devh.project.security.token.dto;
+package com.devh.project.token.dto;
 
 import javax.validation.constraints.NotBlank;
 

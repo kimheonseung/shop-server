@@ -1,12 +1,4 @@
-package com.devh.project.security.token.service;
-
-import java.util.NoSuchElementException;
-
-import javax.servlet.http.HttpServletRequest;
-
-import org.apache.commons.lang3.StringUtils;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
+package com.devh.project.token.service;
 
 import com.devh.project.common.entity.Member;
 import com.devh.project.common.entity.MemberToken;
@@ -15,19 +7,18 @@ import com.devh.project.common.helper.BCryptHelper;
 import com.devh.project.common.helper.JwtHelper;
 import com.devh.project.common.repository.MemberRepository;
 import com.devh.project.common.repository.MemberTokenRepository;
-import com.devh.project.security.token.Token;
-import com.devh.project.security.token.dto.TokenGenerateRequestDTO;
-import com.devh.project.security.token.dto.TokenGenerateResponseDTO;
-import com.devh.project.security.token.dto.TokenInvalidateRequestDTO;
-import com.devh.project.security.token.dto.TokenInvalidateResponseDTO;
-import com.devh.project.security.token.dto.TokenRefreshRequestDTO;
-import com.devh.project.security.token.dto.TokenRefreshResponseDTO;
-import com.devh.project.security.token.exception.TokenGenerateException;
-import com.devh.project.security.token.exception.TokenInvalidateException;
-import com.devh.project.security.token.exception.TokenNotFoundException;
-
+import com.devh.project.token.exception.TokenGenerateException;
+import com.devh.project.token.exception.TokenInvalidateException;
+import com.devh.project.token.exception.TokenNotFoundException;
+import com.devh.project.token.model.Token;
 import io.jsonwebtoken.ExpiredJwtException;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import javax.servlet.http.HttpServletRequest;
+import java.util.NoSuchElementException;
 
 @Service
 @Transactional
@@ -40,13 +31,11 @@ public class TokenService {
     private final JwtHelper jwtHelper;
     private final BCryptHelper bcryptHelper;
 
-    public TokenGenerateResponseDTO generateToken(TokenGenerateRequestDTO tokenGenerateRequestDTO) throws Exception {
-		final String username = tokenGenerateRequestDTO.getUsername();
-		final String password = aes256Helper.decrypt(tokenGenerateRequestDTO.getPassword());
+	public Token generateToken(String username, String password) throws Exception {
 		/* member check */
 		Member member = memberRepository.findByUsername(username).orElseThrow(() -> new TokenGenerateException(username + " does not exists."));
 		/* generate token */
-		if(bcryptHelper.matches(password, member.getPassword())) {
+		if(bcryptHelper.matches(aes256Helper.decrypt(password), member.getPassword())) {
 			Token token = jwtHelper.generateTokenByUsername(username);
 			/* check member token */
 			MemberToken memberToken = memberTokenRepository.findByMember(member).orElse(MemberToken.builder()
@@ -54,33 +43,25 @@ public class TokenService {
 					.build());
 			memberToken.setRefreshToken(token.getRefreshToken());
 			memberTokenRepository.save(memberToken);
-			return TokenGenerateResponseDTO.builder()
-					.token(token)
-					.build();
+			return token;
 		} else
 			throw new TokenGenerateException("password not matches");
 	}
 
-	public TokenInvalidateResponseDTO invalidateToken(TokenInvalidateRequestDTO tokenInvalidateRequestDTO, HttpServletRequest httpServletRequest) throws Exception {
-		final String username = tokenInvalidateRequestDTO.getUsername();
+	public boolean invalidateToken(String username, HttpServletRequest httpServletRequest) throws Exception {
 		final String tokenUsername = jwtHelper.getUsernameFromRequest(httpServletRequest);
 		if(StringUtils.equals(username, tokenUsername)) {
 			Member member = memberRepository.findByUsername(username).orElseThrow(() -> new TokenInvalidateException(username+" not found."));
 			memberTokenRepository.deleteByMember(member);
-			return TokenInvalidateResponseDTO.builder()
-					.result(true)
-					.build();
+			return true;
 		} else
 			throw new TokenInvalidateException("token information is invalid.");
-
 	}
 
 	// jwtUtils 개선 필요
-	public TokenRefreshResponseDTO refreshToken(TokenRefreshRequestDTO tokenRefreshRequestDTO) throws Exception {
-		final Token requestToken = tokenRefreshRequestDTO.getToken();
-		final String accessToken = requestToken.getAccessToken();
-		final String refreshToken = requestToken.getRefreshToken();
-		final TokenRefreshResponseDTO tokenRefreshResponseDTO = TokenRefreshResponseDTO.builder().build();
+	public Token refreshToken(Token toBeRefreshedToken) throws Exception {
+		final String accessToken = toBeRefreshedToken.getAccessToken();
+		final String refreshToken = toBeRefreshedToken.getRefreshToken();
 
 		if(jwtHelper.isTokenExpired(accessToken)) {
 			String username;
@@ -92,30 +73,28 @@ public class TokenService {
 
 			try {
 				if(jwtHelper.isTokenExpired(refreshToken)) {
-					tokenRefreshResponseDTO.setToken(Token.buildLoginRequired());
+					return Token.buildLoginRequired();
 				} else {
 					Member member = memberRepository.findByUsername(username).orElseThrow(NoSuchElementException::new);
 					MemberToken memberToken = memberTokenRepository.findByMember(member).orElseThrow(TokenNotFoundException::new);
 					final String recordRefreshToken = memberToken.getRefreshToken();
 					if(StringUtils.equals(refreshToken, recordRefreshToken)) {
 						Token refreshedToken = jwtHelper.generateTokenByUsername(username);
-						tokenRefreshResponseDTO.setToken(Token.buildRefreshSuccess(refreshedToken.getAccessToken(), refreshedToken.getRefreshToken()));
 						memberToken.setRefreshToken(refreshedToken.getRefreshToken());
 						memberTokenRepository.save(memberToken);
+						return Token.buildRefreshSuccess(refreshedToken.getAccessToken(), refreshedToken.getRefreshToken());
 					} else {
-						tokenRefreshResponseDTO.setToken(Token.buildRefreshFail());
+						return Token.buildRefreshFail();
 					}
 				}
 			} catch (ExpiredJwtException | TokenNotFoundException e) {
-				tokenRefreshResponseDTO.setToken(Token.buildLoginRequired());
+				return Token.buildLoginRequired();
 			} catch (NoSuchElementException e) {
-				tokenRefreshResponseDTO.setToken(Token.buildInvalid());
+				return Token.buildInvalid();
 			}
 		} else {
-			tokenRefreshResponseDTO.setToken(Token.buildAccessTokenNotExpired(accessToken, refreshToken));
+			return Token.buildAccessTokenNotExpired(accessToken, refreshToken);
 		}
-
-		return tokenRefreshResponseDTO;
 	}
     
 }

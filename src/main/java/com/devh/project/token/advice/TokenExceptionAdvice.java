@@ -1,11 +1,11 @@
-package com.devh.project.security.token.advice;
+package com.devh.project.token.advice;
 
 import com.devh.project.common.constant.ApiStatus;
 import com.devh.project.common.dto.ApiResponseDTO;
-import com.devh.project.security.token.exception.TokenException;
-import com.devh.project.security.token.exception.TokenGenerateException;
-import com.devh.project.security.token.exception.TokenInvalidateException;
-import com.devh.project.security.token.exception.TokenRefreshException;
+import com.devh.project.token.exception.TokenException;
+import com.devh.project.token.exception.TokenGenerateException;
+import com.devh.project.token.exception.TokenInvalidateException;
+import com.devh.project.token.exception.TokenRefreshException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 

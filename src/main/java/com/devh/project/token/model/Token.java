@@ -1,5 +1,6 @@
-package com.devh.project.security.token;
+package com.devh.project.token.model;
 
+import com.devh.project.token.constant.TokenStatus;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;

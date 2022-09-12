@@ -12,8 +12,8 @@ import org.mockito.InjectMocks;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.test.util.ReflectionTestUtils;
 
-import com.devh.project.security.token.Token;
-import com.devh.project.security.token.TokenStatus;
+import com.devh.project.token.model.Token;
+import com.devh.project.token.constant.TokenStatus;
 
 import io.jsonwebtoken.ExpiredJwtException;
 
